@@ -88,6 +88,33 @@ const TESTIMONIALS = [
   }
 ];
 
+const FAQ_DATA = [
+  {
+    question: "Do I need an appointment?",
+    answer: "While we do accept walk-ins, we highly recommend booking an appointment to ensure you get your preferred time slot and avoid waiting. You can book directly through our website or via WhatsApp."
+  },
+  {
+    question: "Where exactly are you located?",
+    answer: "We are located in the heart of Srinagar, Kashmir. You can find our exact location on the map in the 'Get In Touch' section at the bottom of this page."
+  },
+  {
+    question: "What are your opening hours?",
+    answer: "We are open every day from 10:00 AM to 8:00 PM. Special holiday hours may apply, so feel free to check our Instagram for updates."
+  },
+  {
+    question: "Do you offer services for children?",
+    answer: "Yes, we offer a 'Junior Cut' specifically for young gentlemen under the age of 12. Our barbers are great with kids and ensure they have a comfortable experience."
+  },
+  {
+    question: "Can I book for a group or wedding event?",
+    answer: "Absolutely! We offer special grooming packages for weddings and group events. Please contact us directly via phone or WhatsApp to discuss your requirements and get a custom quote."
+  },
+  {
+    question: "What payment methods do you accept?",
+    answer: "We accept cash, UPI (Google Pay, PhonePe, Paytm), and all major credit/debit cards."
+  }
+];
+
 // --- Components ---
 
 const Navbar = ({ activeSection, setActiveSection }: { activeSection: string, setActiveSection: (s: string) => void }) => {
@@ -106,6 +133,7 @@ const Navbar = ({ activeSection, setActiveSection }: { activeSection: string, se
     { id: 'booking', label: 'Booking' },
     { id: 'gallery', label: 'Gallery' },
     { id: 'testimonials', label: 'Testimonials' },
+    { id: 'faq', label: 'FAQ' },
     { id: 'contact', label: 'Contact' },
   ];
 
@@ -174,7 +202,7 @@ const Navbar = ({ activeSection, setActiveSection }: { activeSection: string, se
 };
 
 const Hero = ({ onBookClick, onServicesClick }: { onBookClick: () => void, onServicesClick: () => void }) => (
-  <section id="home" className="relative h-screen flex items-center justify-center overflow-hidden">
+  <section id="home" className="relative min-h-screen flex items-center justify-center overflow-hidden py-32">
     <div className="absolute inset-0 z-0">
       <img 
         src="https://images.unsplash.com/photo-1503951914875-452162b0f3f1?auto=format&fit=crop&q=80&w=2070" 
@@ -186,7 +214,7 @@ const Hero = ({ onBookClick, onServicesClick }: { onBookClick: () => void, onSer
       <div className="absolute inset-0 spotlight opacity-50"></div>
     </div>
 
-    <div className="relative z-10 text-center px-6 max-w-6xl">
+    <div className="relative z-10 text-center px-6 max-w-7xl">
       <motion.div
         initial={{ opacity: 0, scale: 1.5, y: 100 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -198,12 +226,12 @@ const Hero = ({ onBookClick, onServicesClick }: { onBookClick: () => void, onSer
         className="title-wrapper"
       >
         <span className="text-gold uppercase tracking-[0.6em] text-sm md:text-base font-bold mb-6 block opacity-70">The Kashur Barber Experience</span>
-        <h1 className="text-[14vw] md:text-[12vw] font-black leading-[0.85] tracking-[-0.05em] uppercase mb-12 flex flex-col items-center transform -skew-x-6">
+        <h1 className="text-[clamp(2.5rem,10vw,4.5rem)] md:text-[clamp(4.5rem,8vw,8rem)] lg:text-[clamp(6rem,10vw,10rem)] font-black leading-[1.2] tracking-[-0.05em] uppercase mb-16 flex flex-col items-center transform -skew-x-6 gap-2 md:gap-6">
           <span className="block">We Don't Just</span>
           <span className="block text-gold">Cut Hair</span>
           <span className="block">We Create Art</span>
         </h1>
-        <p className="text-lg md:text-xl text-white/50 mb-12 max-w-2xl mx-auto font-light leading-relaxed tracking-wide">
+        <p className="text-xl md:text-2xl text-white/50 mb-20 max-w-3xl mx-auto font-light leading-relaxed tracking-wide">
           Precision grooming for the modern gentleman. 
           Where every cut is a masterpiece and every client is a canvas.
         </p>
@@ -552,6 +580,64 @@ const Testimonials = () => (
   </section>
 );
 
+const FAQ = () => {
+  const [activeIndex, setActiveIndex] = useState<number | null>(null);
+
+  return (
+    <section id="faq" className="py-24 bg-dark">
+      <div className="max-w-4xl mx-auto px-6">
+        <div className="text-center mb-16">
+          <h2 className="text-5xl md:text-7xl font-bold mb-4 uppercase">FAQ</h2>
+          <div className="w-20 h-1 bg-gold mx-auto mb-6"></div>
+          <p className="text-white/50">Everything you need to know about your next visit to Kashur Barber.</p>
+        </div>
+
+        <div className="space-y-4">
+          {FAQ_DATA.map((item, idx) => (
+            <motion.div 
+              key={idx}
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: idx * 0.05 }}
+              className="border border-gold/10 bg-dark-lighter overflow-hidden"
+            >
+              <button 
+                onClick={() => setActiveIndex(activeIndex === idx ? null : idx)}
+                className="w-full p-6 text-left flex justify-between items-center group"
+              >
+                <span className={`text-lg font-bold transition-colors ${activeIndex === idx ? 'text-gold' : 'text-white/80 group-hover:text-white'}`}>
+                  {item.question}
+                </span>
+                <motion.div
+                  animate={{ rotate: activeIndex === idx ? 90 : 0 }}
+                  className="text-gold"
+                >
+                  <ChevronRight size={20} />
+                </motion.div>
+              </button>
+              <AnimatePresence>
+                {activeIndex === idx && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: 'auto', opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.3, ease: "easeInOut" }}
+                  >
+                    <div className="px-6 pb-6 text-white/50 leading-relaxed border-t border-gold/5 pt-4">
+                      {item.answer}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
 const Contact = () => (
   <section id="contact" className="py-24 bg-dark border-t border-white/5">
     <div className="max-w-7xl mx-auto px-6">
@@ -679,6 +765,7 @@ export default function App() {
       <Booking selectedService={selectedService} />
       <Gallery />
       <Testimonials />
+      <FAQ />
       <Contact />
       <Footer />
 
